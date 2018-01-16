@@ -1,0 +1,28 @@
+#-*- coding:utf-8 -*-
+"""This script is created to predict the housefund based on Age and MaritalState seperately
+"""
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+#数据导入
+a = pd.read_csv("3.1_modeldata")
+b = pd.read_csv("3.2_modeldata")
+
+#数据清洗
+c = a.dropna()
+d = b.dropna()
+
+#################################
+#婚龄分级
+sql = ‘Select MaritalState From * where Martial state between 0 and 10’
+#年龄分级
+公积金分级
+#################################
+
+#训练模型
+Liner=LinearRegression（）
+X = [c[Age]]
+Y = [c[housefund]]
+linear.fit(X,Y)
+e= linear.predict(f[Age])

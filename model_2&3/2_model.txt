@@ -1,0 +1,29 @@
+#-*- coding:utf-8 -*-
+"""This script is created to predict the survival level based on Age and (nation,sex) seperately
+"""
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+
+#数据导入
+a = pd.read_csv("2.1_modeldata")
+b = pd.read_csv("2.2_modeldata")
+frame =[a,b]
+c= pd.concat(frame)
+
+#数据清洗
+d = c.dropna()
+
+#################################
+#婚龄分级
+sql = ‘Select MaritalState From * where Martial state between 0 and 10’
+#年龄分级
+民族分级
+#################################
+
+#训练模型
+Logi=LogisticRegression（）
+X = [d[Age]]
+Y = [d[survivalstate]]
+linear.fit(X,Y)
+e= linear.predict(f[Age])
