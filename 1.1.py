@@ -1,29 +1,34 @@
 #-*- coding:utf-8 -*-
 """
 滨州建模人口说明：
-1.1通过工伤人口的和非工伤人口的基本信息，构建 人口—工伤 模型
-此模型诣在学习工伤人口在“年龄”，“性别”，“民族”和“婚龄”方面的倾向性。
+1，本模型诣在学习未交失业保险的各年龄段和工伤之间的联系。
+2，需要的数据为“未交失业保险”的ID，“年龄”（数值化为年龄段指数，20-30岁为1，30-40岁为2，40-50岁为3，50-60岁为4，60+为5），“工伤情况”（工伤为1，非为零）
+3，暂时选择逻辑回归
 """
+import pymysql
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-a = pd.read_csv("t_rkbaseinfo.csv" )
-a_1 = a.loc[:, ["Age","Sex","MaritalStatus","Nation","LaborInjureState"]].fillna(0)
-b = pd.read_csv("LaborInjure.csv")
-b_1 = b.loc[:, ["Age","Sex","MaritalStatus","Nation","LaborInjureState"]].fillna(0)
-frame = [a_1,b_1]
-c= pd.concat(frame).fillna(0)
-e= c.replace(('未说明的婚姻状况','丧偶','离婚','复婚','再婚','汉族'),(0,30,10,20,-10,1))
-#print e
-e.coloumns = ["Age","Sex","MaritalStatus","Nation"]
-e.coloumn = ["LaborInjureState"]
-X = e.loc[:,["Age","Sex","MaritalStatus","Nation"]]
-y= e["LaborInjureState"]
 
-log =LogisticRegression()
-log.fit(X,y)
+# 打开数据库连接（ip/数据库用户名/登录密码/数据库名）
+import pymysql.cursors
 
-print log.predict([[3,2,90,3]])
+# Connect to the database
+conn = pymysql.connect(host='172.20.120.187',
+                             port=3306,
+                             user='root',
+                             password='Gepoint',
+                             db='edc_rkceshi',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+
+cursor = conn.cursor()
+
+sql='Select a.Age,+ b.Idcard,+c.LaborInjureState FROM t_rk_baseinfo as a,t_rk_UnemployInsur as b,t_rk_laborinjure as c WHERE a.Idcard = b.Idcard=c.Idcard'
+
+cursor.execute(sql)
+a= cursor.fetchall()
+print str(a)
 
 
 
